@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react'
 import { useGetItemsAPI } from './hooks/useApi';
 import './App.css'
 import { RenderGifs } from './components/RenderGifs'
+import { useInfiniteScroll } from './hooks/useInfiniteScroll';
 
 function App() {
-    const [gifs, getGifs, loadingGifs, hasMore] = useGetItemsAPI();
+    const [gifs, getGifs, loadingGifs, getMoreGifs, hasMore] = useGetItemsAPI();
     
     // const navigate = useNavigate();
     const [query, setQuery] = useState([]);
@@ -19,12 +20,19 @@ function App() {
     //   request()
     // }, [q])
 
-    console.log(gifs);
+    // console.log(gifs);
+    // console.log(hasMore);
 
+    const lastElementRef = useInfiniteScroll(
+      () => getMoreGifs("search", { q, limit: 10 }),
+      loadingGifs,
+      hasMore
+    );
+  
     const onSubmit = (e) => {
         e.preventDefault();
         if (query) {
-          getGifs(`search`, { q })
+          getGifs(`search`, { q, limit: 10 })
         }
 
         // if (search) {
@@ -47,14 +55,14 @@ function App() {
       //         </button>
       //     </form>
       // </div> */}
-      <form onSubmit={onSubmit} className="px-8 mt-4 md:px-0 flex justify-center">
+      <form onSubmit={onSubmit} className="mt-4 md:px-0 flex justify-center">
     {/* <label
       htmlFor="default-search"
       className="mb-2 text-sm font-medium sr-only text-white"
     >
       Search
     </label> */}
-    <div className="relative max-w-[302px]">
+    <div className="relative w-[320px] max-w-[320px]">
       {/* <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
         <svg
           className="w-4 h-4 text-gray-400"
@@ -106,7 +114,11 @@ function App() {
     </div>
   </form>
   
-  <RenderGifs gifs={gifs} loading={loadingGifs}/>
+  <RenderGifs 
+    gifs={gifs} 
+    loading={loadingGifs} 
+    lastElementRef={lastElementRef}
+  />
   
 
 

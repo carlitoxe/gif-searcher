@@ -1,14 +1,22 @@
 import { GifCard } from "./GifCard"
 
-function RenderGifs({gifs, loading}) {
+function RenderGifs({gifs, loading, lastElementRef}) {
     
     return (
         
-        <section className='gifs grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-5 justify-items-center gap-3'>
+        <section className='columns-1 md:columns-2 lg:columns-3 justify-items-center gap-3 mt-5'>
         { loading ? <div>loading...</div> : 
-            gifs?.data?.map((gif, i) => {
+            gifs?.map((gif, i) => {
                 return (
-                    <GifCard url={gif.images.downsized.url} title={gif.title} key={i} />
+                    <GifCard 
+                        key={i} 
+                        url={gif.images.downsized.url} 
+                        title={gif.title} 
+                        img={gif.images.downsized.url}
+                        gifs={gifs}
+                        lastElementRef={lastElementRef}
+                        i={i}
+                    />
                 )
             })
         }

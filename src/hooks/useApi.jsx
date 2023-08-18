@@ -11,25 +11,45 @@ const api = axios.create({
 
 function useGetItemsAPI() {
     const [items, setItems] = useState([]);
-    const [page, setPage] = useState(1);
+    const [offset, setOffset] = useState(0);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    console.log(hasMore);
 
     const getItems = async (path, params = {}) => {
         setLoading(true);
         await api.get(path, { params: {...params} })
                  .then(res => {
-                    setPage(page + 1);
-                    console.log(res);
-                    setItems(res.data)
-                    if (res.data.page === res.data.total_pages) return setHasMore(false);
+                    setOffset(offset + res.data.pagination.count);
+                    setItems(res.data.data)
+                    console.log(res.data);
+                    console.log(res.data.pagination.total_count);
+                    if (res.data.pagination.count === res.data.pagination.total_count) return setHasMore(false);
                  })
                  .catch(err => console.error(err))
                  .finally(() => setLoading(false))
 
     }
 
-    return [items, getItems, loading, hasMore]
+    const getMoreItems = async (path, params = {}) => {
+        setLoading(true);
+        await api.get(path, { params: {offset: offset, ...params} })
+                 .then(res => {
+                    console.log('getMoreGifs offset', offset);
+                    setItems(prevData => [...prevData, ...res.data.data]);
+                    // if (res.data.page === res.data.total_pages) return setHasMore(false);
+                    if (res.data.pagination.count === res.data.pagination.total_count) return setHasMore(false);
+                    setOffset(offset + res.data.pagination.count);
+                 })
+                 .catch(err => console.error(err))
+                 .finally(() => {
+                    
+                    setLoading(false);  
+                 })
+
+    }
+
+    return [items, getItems, loading, getMoreItems, hasMore]
 
 }
 
