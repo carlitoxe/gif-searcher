@@ -38,7 +38,7 @@ function App() {
   
     return (
       <>
-      <a href="https://carlitoxe.github.io/gif-searcher/"><h1 className='font-semibold text-white text-3xl'>Search GIFs</h1></a>
+      <a href="./"><h1 className='font-semibold text-white text-3xl'>Search GIFs</h1></a>
       {/* //     <div className="search-form-container md:px-4 w-full flex justify-center mt-4 md:mt-0 px-3 md:px-0">
       //     <form className="search-form flex rounded-full p-1 h-[35px] bg-transparent outline-2 border border-gray-600 items-center" onSubmit={onSubmit}>
       //         <input value={search} onChange={e => setSearch(e.target.value.toLowerCase())} className="search-input rounded-full bg-transparent w-full px-4 focus:bg-gray-600 w-full placeholder:text-slate-500" type="text" placeholder="Search for movies..." />
